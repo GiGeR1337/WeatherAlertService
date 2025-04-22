@@ -1,6 +1,6 @@
-package weather
+package Utils
 
-func weatherCodeToText(code int) string {
+func WeatherCodeToText(code int) string {
 	switch code {
 	case 0:
 		return "Clear sky"

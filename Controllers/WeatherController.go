@@ -1,6 +1,7 @@
-package weather
+package Controllers
 
 import (
+	weather2 "awesomeProject/Services"
 	"encoding/json"
 	"net/http"
 )
@@ -12,7 +13,7 @@ func GetWeatherHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	weather, err := FetchWeather(city)
+	weather, err := weather2.FetchWeather(city)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusNotFound)
 		return

@@ -1,4 +1,4 @@
-package weather
+package Models
 
 type WeatherData struct {
 	City        string  `json:"city"`

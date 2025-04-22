@@ -1,21 +1,24 @@
 package main
 
 import (
+	"awesomeProject/Controllers"
+	"awesomeProject/Database"
+	"awesomeProject/Scheduler"
 	"log"
 	"net/http"
 
-	"awesomeProject/subscriptions"
-	"awesomeProject/weather"
 	"github.com/gorilla/mux"
 )
 
 func main() {
-	db := weather.InitDB()
+	db := Database.InitDB()
+
+	Scheduler.StartDailyNotifier(db)
 
 	r := mux.NewRouter()
-	r.HandleFunc("/weather", weather.GetWeatherHandler).Methods("GET")
-	r.HandleFunc("/subscriptions", subscriptions.PostSubscriptionHandler(db)).Methods("POST")
-	r.HandleFunc("/subscriptions", subscriptions.GetAllSubscriptionsHandler(db)).Methods("GET")
+	r.HandleFunc("/weather", Controllers.GetWeatherHandler).Methods("GET")
+	r.HandleFunc("/subscriptions", Controllers.PostSubscriptionHandler(db)).Methods("POST")
+	r.HandleFunc("/subscriptions", Controllers.GetAllSubscriptionsHandler(db)).Methods("GET")
 
 	log.Println("Server running at http://localhost:8080")
 	log.Fatal(http.ListenAndServe(":8080", r))

@@ -1,13 +1,15 @@
-package weather
+package Services
 
 import (
+	"awesomeProject/Models"
+	"awesomeProject/Utils"
 	"encoding/json"
 	"fmt"
 	"net/http"
 	"strings"
 )
 
-func FetchWeather(city string) (*WeatherData, error) {
+func FetchWeather(city string) (*Models.WeatherData, error) {
 	lat, lon, resolvedName, err := getCoordinates(city)
 	if err != nil {
 		return nil, fmt.Errorf("City not found")
@@ -24,16 +26,16 @@ func FetchWeather(city string) (*WeatherData, error) {
 	}
 	defer resp.Body.Close()
 
-	var apiResp OpenMeteoResponse
+	var apiResp Models.OpenMeteoResponse
 	if err := json.NewDecoder(resp.Body).Decode(&apiResp); err != nil {
 		return nil, fmt.Errorf("Failed to parse weather data")
 	}
 
-	return &WeatherData{
+	return &Models.WeatherData{
 		City:        resolvedName,
 		Temperature: apiResp.CurrentWeather.Temperature,
 		WindSpeed:   apiResp.CurrentWeather.Windspeed,
-		Condition:   weatherCodeToText(apiResp.CurrentWeather.Weathercode),
+		Condition:   Utils.WeatherCodeToText(apiResp.CurrentWeather.Weathercode),
 	}, nil
 }
 
@@ -46,7 +48,7 @@ func getCoordinates(city string) (float64, float64, string, error) {
 	}
 	defer resp.Body.Close()
 
-	var geoResp GeoResponse
+	var geoResp Models.GeoResponse
 	if err := json.NewDecoder(resp.Body).Decode(&geoResp); err != nil {
 		return 0, 0, "", err
 	}
