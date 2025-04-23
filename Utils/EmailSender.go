@@ -6,7 +6,7 @@ import (
 )
 
 var FromEmail = "YOUR_MAIL"
-var AppPassword = "YOUR_PASSWORD" //Gmail App Password
+var AppPassword = "YOUR_PASSWORD"
 
 func SendEmailGmail(to string, subject string, body string) error {
 	m := gomail.NewMessage()

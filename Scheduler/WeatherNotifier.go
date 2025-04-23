@@ -1,6 +1,7 @@
 package Scheduler
 
 import (
+	"awesomeProject/Database"
 	"awesomeProject/Models"
 	"awesomeProject/Services"
 	"awesomeProject/Utils"
@@ -67,4 +68,16 @@ func sendNotification(email string, w *Models.WeatherData, condition string) {
 	} else {
 		log.Printf("Email sent to %s for condition %s\n", email, condition)
 	}
+
+	go func() {
+		logEntry := Models.NotificationLog{
+			Email:     email,
+			City:      w.City,
+			Condition: condition,
+			MatchedAt: time.Now().Format(time.RFC3339),
+		}
+		if err := Database.DB.Create(&logEntry).Error; err != nil {
+			log.Println("Failed to save notification log:", err)
+		}
+	}()
 }
